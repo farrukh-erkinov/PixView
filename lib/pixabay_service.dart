@@ -2,12 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class PixabayService {
-  final String apiKey =
-      '46442938-2e3a0c3011fc7b097e6529518'; // Вставьте свой API ключ
+  final String apiKey = '46442938-2e3a0c3011fc7b097e6529518';
 
-  Future<List<ImageData>> fetchImages(int page) async {
+  Future<List<ImageData>> fetchImages({int page = 1, String query = ''}) async {
     final url =
-        'https://pixabay.com/api/?key=$apiKey&image_type=photo&per_page=20&page=$page';
+        'https://pixabay.com/api/?key=$apiKey&image_type=photo&per_page=20&page=$page&q=$query&safesearch=true';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -23,14 +22,24 @@ class PixabayService {
 
 class ImageData {
   final String url;
+  final String author;
+  final String tags;
   final int likes;
   final int views;
 
-  ImageData({required this.url, required this.likes, required this.views});
+  ImageData({
+    required this.url,
+    required this.author,
+    required this.tags,
+    required this.likes,
+    required this.views,
+  });
 
   factory ImageData.fromJson(Map<String, dynamic> json) {
     return ImageData(
       url: json['webformatURL'],
+      author: json['user'],
+      tags: json['tags'],
       likes: json['likes'],
       views: json['views'],
     );
