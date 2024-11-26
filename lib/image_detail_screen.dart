@@ -9,25 +9,21 @@ class ImageDetailScreen extends StatelessWidget {
 
   const ImageDetailScreen({super.key, required this.image});
 
-// Метод для запроса разрешений
   Future<bool> _requestStoragePermission() async {
-    // Запрашиваем разрешение на доступ к хранилищу
     final status = await Permission.storage.request();
 
     if (status.isGranted) {
-      return true; // Разрешение предоставлено
+      return true;
     } else if (status.isDenied) {
-      return false; // Разрешение отклонено
+      return false;
     } else if (status.isPermanentlyDenied) {
-      // Перенаправляем пользователя в настройки приложения
       openAppSettings();
       return false;
     }
-    return false; // В случае других состояний
+    return false;
   }
 
   Future<void> _downloadImage(BuildContext context, String imageUrl) async {
-    // Проверяем разрешения на чтение/запись в хранилище
     bool hasPermission = await _requestStoragePermission();
     if (!hasPermission) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -35,11 +31,10 @@ class ImageDetailScreen extends StatelessWidget {
             content:
                 Text('Разрешение на доступ к хранилищу не предоставлено.')),
       );
-      return; // Выход, если разрешение не предоставлено
+      return;
     }
 
     try {
-      // Получаем директорию для сохранения файла
       final directory = await getExternalStorageDirectory();
       if (directory == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -49,11 +44,9 @@ class ImageDetailScreen extends StatelessWidget {
         return;
       }
 
-      // Формируем путь к файлу
       final fileName = imageUrl.split('/').last;
       final filePath = '${directory.path}/$fileName';
 
-      // Загружаем файл с помощью Dio
       final dio = Dio();
       final response = await dio.download(imageUrl, filePath);
 

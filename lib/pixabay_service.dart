@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class PixabayService {
-  final String apiKey = '46442938-2e3a0c3011fc7b097e6529518';
+  final String apiKey = 'xxx';
 
   Future<List<ImageData>> fetchImages({int page = 1, String query = ''}) async {
     final url =
